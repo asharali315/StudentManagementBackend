@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Studentmanagement.Persistance;
 
@@ -10,9 +11,11 @@ using Studentmanagement.Persistance;
 namespace Studentmanagement.Migrations
 {
     [DbContext(typeof(StudentManagementDBContext))]
-    partial class StudentManagementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241030090952_AddPasswordInUser")]
+    partial class AddPasswordInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,10 +59,6 @@ namespace Studentmanagement.Migrations
 
                     b.Property<int>("ContactNumber")
                         .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuardianName")
                         .IsRequired()

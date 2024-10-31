@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Studentmanagement.Persistance;
 
@@ -10,9 +11,11 @@ using Studentmanagement.Persistance;
 namespace Studentmanagement.Migrations
 {
     [DbContext(typeof(StudentManagementDBContext))]
-    partial class StudentManagementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241031054013_AddEmailInUser")]
+    partial class AddEmailInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -2,107 +2,85 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Studentmanagement.DTO;
 using Studentmanagement.Models;
 using Studentmanagement.Persistance;
+using Studentmanagement.Services.IServices;
 
 namespace Studentmanagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CoursesController : ControllerBase
     {
-        private readonly StudentManagementDBContext _context;
+        public ICourseService _CourseService { get; }
 
-        public CoursesController(StudentManagementDBContext context)
+        public CoursesController(ICourseService CourseService)
         {
-            _context = context;
+            _CourseService = CourseService;
         }
+
 
         // GET: api/Courses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Course>>> GetCourse()
+        public async Task<ActionResult> GetCourse()
         {
-            return await _context.Course.ToListAsync();
+            var result = await _CourseService.GetCoursesAsync();
+            return Ok(new { message = "Data retrieved", data = result }); 
         }
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Course>> GetCourse(int id)
         {
-            var course = await _context.Course.FindAsync(id);
+            var course = await _CourseService.GetCourseByIdAsync(id);
 
             if (course == null)
             {
                 return NotFound();
             }
 
-            return course;
+            return Ok(new { message = "Data retrieved", data = course});
         }
 
         // PUT: api/Courses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(int id, Course course)
+        public async Task<IActionResult> PutCourse(int id, CourseCommandDTO course)
         {
-            if (id != course.Id)
-            {
-                return BadRequest();
-            }
+          var result = await _CourseService.UpdateCourseAsync(id, course);
 
-            _context.Entry(course).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CourseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(new { message = "course updated", data = result });
         }
 
         // POST: api/Courses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Course>> PostCourse(Course course)
+        public async Task<ActionResult<Course>> PostCourse(CourseCommandDTO course)
         {
-            _context.Course.Add(course);
-            await _context.SaveChangesAsync();
+            var result = await _CourseService.CreateCourseAsync(course);
 
-            return CreatedAtAction("GetCourse", new { id = course.Id }, course);
+            return Ok(new { message = "course created",data = result });
         }
 
         // DELETE: api/Courses/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(int id)
         {
-            var course = await _context.Course.FindAsync(id);
+            var course = await _CourseService.GetCourseByIdAsync(id);
             if (course == null)
             {
                 return NotFound();
             }
 
-            _context.Course.Remove(course);
-            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { message = "course deleted", data = course });
         }
 
-        private bool CourseExists(int id)
-        {
-            return _context.Course.Any(e => e.Id == id);
-        }
     }
 }

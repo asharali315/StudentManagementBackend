@@ -10,6 +10,9 @@ namespace Studentmanagement.Models;
     [Required]
     public string Name { get; set; }
     [Required]
+    public string Email { get; set; }
+    
+    [Required]
     public string Cnic { get; set; }
     [Required]
     public string GuardianName { get; set; }
@@ -17,5 +20,7 @@ namespace Studentmanagement.Models;
     public string Image { get; set; }
     [Required]
     public int ContactNumber { get; set; }
+    [Required]
+    public string Password { get; set; }
 }
 
